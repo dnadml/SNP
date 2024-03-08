@@ -12,8 +12,8 @@ import time
 
 # Import classes and functions from predictionnet module
 # Import functions from base_miner module
-from base_miner.predict_dn import predict
-from base_miner.get_data_dn import prep_data, scale_data
+from SNP.predict_dn import predict
+from SNP.get_data_dn import prep_data, scale_data
 
 def get_prediction(timestamp: int) -> None:
     ny_timezone = timezone('America/New_York')
