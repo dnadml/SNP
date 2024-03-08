@@ -6,12 +6,12 @@ import os
 import pandas as pd
 
 
-from get_data_dn import prep_data
+from base_miner.get_data_dn import prep_data
 
 def predict(timestamp):
     # load model and scaler
-    model = joblib.load('./mining_models/model_gb.pkl')
-    scaler = joblib.load('./mining_models/scaler_gb.pkl')
+    model = joblib.load('/mining_models/model_gb.pkl')
+    scaler = joblib.load('/mining_models/scaler_gb.pkl')
 
     # confirm no missing NA (could be duplicate step)
     data = prep_data(drop_na=False)
@@ -26,7 +26,7 @@ def predict(timestamp):
     latest_row = data.iloc[-1:].copy()
     
     # extract features for scaling and prediction
-    features_columns = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'SMA_50', 'SMA_200', 'RSI', 'CCI', 'Momentum', 'EMA_50', 'Low_lag_5', 'High_lag_5', 'Open_Rolling_10', 'Low_Rolling_10', 'Rolling_Avg_Diff_10']
+    features_columns = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'SMA_50']
     latest_features = latest_row[features_columns]
     
     # scale features for loading data
@@ -68,11 +68,12 @@ def predict(timestamp):
     ############################################################################    
     
     #### Uncomment return latest_row and comment return final_prediction to see table format of data ####
+    #### This also needs to be changed when running the main script, use latest_row for main ####
         
-    # return latest_row
+    #return latest_row
         
-    print(final_prediction)
-    return final_prediction    
+    prediction = float(round(final_prediction,6))
+    return prediction    
    
 
     # Test for return value
