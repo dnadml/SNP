@@ -6,7 +6,7 @@ import os
 import pandas as pd
 
 
-from SNP.get_data_dn import prep_data
+from get_data_dn import prep_data
 
 def predict(timestamp):
     # load model and scaler
