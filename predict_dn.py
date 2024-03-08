@@ -10,8 +10,8 @@ from get_data_dn import prep_data
 
 def predict(timestamp):
     # load model and scaler
-    model = joblib.load('/snpOracle/SNP/mining_models/model_gb.pkl')
-    scaler = joblib.load('/snpOracle/SNP/mining_models/scaler_gb.pkl')
+    model = joblib.load('/snpOracle/SNP/model_gb.pkl')
+    scaler = joblib.load('/snpOracle/SNP/scaler_gb.pkl')
 
     # confirm no missing NA (could be duplicate step)
     data = prep_data(drop_na=False)
