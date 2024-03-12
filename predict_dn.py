@@ -5,7 +5,6 @@ import numpy as np
 import os
 import pandas as pd
 
-
 from SNP.get_data_dn import prep_data
 
 def predict(timestamp):
@@ -16,17 +15,18 @@ def predict(timestamp):
     # confirm no missing NA (could be duplicate step)
     data = prep_data(drop_na=False)
 
-    # data = data[data['Datetime'] <= timestamp]  # Used for backtesting COMMENT OUT!
     
     # Print yahoo data for sanity check if need be
-    # print("Last 10 rows of the fetched data for verification:")
-    # print(data.tail(10))
+    print("Last 10 rows of the fetched data for verification:")
+    print(data.tail(10))
 
     # ensure datetime
     latest_row = data.iloc[-1:].copy()
     
     # extract features for scaling and prediction
-    features_columns = ['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'SMA_50']
+    excluded_columns = ['Datetime', 'NextClose']  # Add any other columns you know should be excluded.
+    features_columns = [col for col in latest_row.columns if col not in excluded_columns]
+
     latest_features = latest_row[features_columns]
     
     # scale features for loading data
@@ -70,10 +70,12 @@ def predict(timestamp):
     #### Uncomment return latest_row and comment return final_prediction to see table format of data ####
     #### This also needs to be changed when running the main script, use latest_row for main ####
         
-    #return latest_row
+    # return latest_row
         
     prediction = float(round(final_prediction,6))
     return prediction    
+   
+  
    
 
     # Test for return value

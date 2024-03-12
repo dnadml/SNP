@@ -6,34 +6,100 @@ from typing import Tuple
 import numpy as np
 import pandas as pd
 import ta
+from ta import add_all_ta_features
 import yfinance as yf
+from twelvedata import TDClient
+import warnings
 
+# Twelve Data API Key
+td = TDClient(apikey="6857b613682340e79585cdbcb1c98394")
 
 def prep_data(drop_na:bool = True) -> DataFrame:
-    data = yf.download('^GSPC', period='60d', interval='5m')
-    data
+    ### Yahoo Finance Original ####
+    data_yf = yf.download('^GSPC', period='60d', interval='5m')
+    data_yf = data_yf.drop(columns=['Adj Close'])
+    data_yf.index = data_yf.index.tz_localize(None)
+    data_yf.rename(columns={'Close': 'close'}, inplace=True)
+    data_yf
+
+    data = data_yf
+
+
+    # # Construct the necessary time series
+    # ts = td.time_series(
+    #     symbol="GSPC",
+    #     interval="5min",
+    #     outputsize=5000,
+    #     timezone="America/New_York",
+    # )
+    # # return dataframe
+    # warnings.simplefilter(action='ignore', category=FutureWarning)
+    # data = ts.with_bbands(ma_type="EMA").as_pandas()
+    # data.index.names = ['Datetime']
+    # data = data.sort_index()
+    # data
+
+    ################################### TWELVE DATA TRAINING ##################################
+    ###########################################################################################
+    #  # Construct the necessary time series
+    # ts = td.time_series(
+    #     symbol="GSPC",
+    #     interval="5min",
+    #     outputsize=5000,
+    #     timezone="America/New_York",
+    # )
+    # # return dataframe
+    # warnings.simplefilter(action='ignore', category=FutureWarning)
+    # data = ts.with_bbands(ma_type="EMA").as_pandas()
+    # data.index.names = ['Datetime']
+    # data = data.sort_index()
+
+    # data
+
+    # # Construct the necessary time series
+    # ts = td.time_series(
+    #     symbol="GSPC",
+    #     interval="5min",
+    #     outputsize=5000,
+    #     end_date="2023-12-06",
+    #     timezone="America/New_York",
+    # )
+    # warnings.simplefilter(action='ignore', category=FutureWarning)
+    # temp = ts.with_bbands(ma_type="EMA").as_pandas()
+
+    # data = pd.concat([temp, data])
+    # data = data.drop_duplicates()
+    # data = data.sort_index()
+
+    ###########################################################################################
+    ###########################################################################################
+
     # Features
-    data['SMA_50'] = data['Close'].rolling(window=50).mean()
-    data['Prev_Close'] = data['Close'].shift(1)
-    data['SMA_50'] = ta.trend.sma_indicator(data['Close'], window=50)
-    data['EMA_50'] = ta.trend.ema_indicator(data['Close'], window=50)
-    data['RSI'] = ta.momentum.RSIIndicator(data['Close'], window=14).rsi()
-    data['SMA_200'] = data['Close'].rolling(window=200).mean()
-    data['Open_Rolling_10'] = data['Open'].rolling(window=10).mean()
-    data['Low_Rolling_10'] = data['Low'].rolling(window=10).mean()
-    data['Rolling_Avg_Diff_10'] = data['Open_Rolling_10'] - data['Low_Rolling_10']
-    data['RSI'] = ta.momentum.RSIIndicator(data['Close']).rsi()
-    data['CCI'] = ta.trend.CCIIndicator(data['High'], data['Low'], data['Close']).cci()
-    data['Momentum'] = ta.momentum.ROCIndicator(data['Close']).roc()
-
-    for lag in [5]:
-        data[f'Low_lag_{lag}'] = data['Low'].shift(lag)
-        data[f'High_lag_{lag}'] = data['High'].shift(lag)
-
-    
+    data['SMA_Close_30'] = ta.trend.sma_indicator(data['close'], window=30)
+    data['SMA_Close_20'] = ta.trend.sma_indicator(data['close'], window=20)
+    data['SMA_Close_15'] = ta.trend.sma_indicator(data['close'], window=15)
+    data['SMA_Close_10'] = ta.trend.sma_indicator(data['close'], window=10)
+    data['SMA_Close_3'] = ta.trend.sma_indicator(data['close'], window=3)
+    data['SMA_Low_3'] = ta.trend.sma_indicator(data['Low'], window=3)
+    data['SMA_Low_1'] = ta.trend.sma_indicator(data['Low'], window=1)
+    data['SMA_Open_3'] = ta.trend.sma_indicator(data['Open'], window=30)
+    data['SMA_Open_1'] = ta.trend.sma_indicator(data['Open'], window=1)
+    data['Prev_Close'] = data['close'].shift(1)
 
     # Features that Didnt Influence Well
-    
+    # data['EMA_50'] = ta.trend.ema_indicator(data['Close'], window=50)
+    # data['Prev_Close'] = data['Close'].shift(1)
+    # for lag in [5]:
+    #     data[f'Low_lag_{lag}'] = data['Low'].shift(lag)
+    #     data[f'High_lag_{lag}'] = data['High'].shift(lag)
+    # data['RSI'] = ta.momentum.RSIIndicator(data['Close'], window=14).rsi()
+    # data['SMA_200'] = data['Close'].rolling(window=200).mean()
+    # data['Open_Rolling_10'] = data['Open'].rolling(window=10).mean()
+    # data['Low_Rolling_10'] = data['Low'].rolling(window=10).mean()
+    # data['Rolling_Avg_Diff_10'] = data['Open_Rolling_10'] - data['Low_Rolling_10']
+    # data['RSI'] = ta.momentum.RSIIndicator(data['Close']).rsi()
+    # data['CCI'] = ta.trend.CCIIndicator(data['High'], data['Low'], data['Close']).cci()
+    # data['Momentum'] = ta.momentum.ROCIndicator(data['Close']).roc()
     # data['Open_to_Low_Pct_Change'] = (data['Open'] - data['Low']) / data['Open'] * 100
     # data['Custom_VIX'] = data['Close'].rolling(window=10).std() * np.sqrt(252)
     # data['Low_rolling_std_5'] = data['Low'].rolling(window=5).std()
@@ -47,12 +113,8 @@ def prep_data(drop_na:bool = True) -> DataFrame:
     # data['VROC'] = data['VROC'].replace([np.inf, -np.inf], np.nan)
     # data['VROC'] = data['VROC'].fillna(0)
 
-    data['NextClose'] = data['Close'].shift(-1)
+    data['NextClose'] = data['close'].shift(-1)
     
-    # backup_data = data
-    # backup_data.to_csv('C:/Users/Drew/Desktop/5 min backup.csv')
-
-
     # Drop NaN values
     if(drop_na):
         data.dropna(inplace=True)
@@ -68,18 +130,3 @@ def round_down_time(dt:datetime, interval_minutes:int = 5) -> datetime:
                                 microseconds=dt.microsecond)
 
     return rounded_dt
-
-def scale_data(data:DataFrame) -> Tuple[MinMaxScaler, np.ndarray, np.ndarray]:
-    X = data[['Open', 'High', 'Low', 'Close', 'Adj Close', 'Volume', 'SMA_50', 'SMA_200', 'RSI', 'CCI', 'Momentum', 'EMA_50', 'Low_lag_5', 'High_lag_5', 'Open_Rolling_10', 'Low_Rolling_10', 'Rolling_Avg_Diff_10']].values
-
-    # Prepare target variable
-    y = data[['NextClose']].values
-
-    # Scale features
-    scaler = MinMaxScaler(feature_range=(0, 1))
-    X_scaled = scaler.fit_transform(X)
-    y_scaled = scaler.fit_transform(y.reshape(-1, 1)).reshape(-1)
-
-    return scaler, X_scaled, y_scaled
-
-
