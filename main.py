@@ -12,7 +12,7 @@ import time
 
 # Import classes and functions from predictionnet module
 # Import functions from base_miner module
-from predict_dn import predict
+from predict_prod import predict
 
 def get_prediction(timestamp: int) -> None:
     ny_timezone = timezone('America/New_York')
