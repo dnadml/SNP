@@ -3,7 +3,7 @@ import numpy as np
 
 from SNP.get_data_prod import prep_data
 
-def predict():
+def predict(timestamp):
     # Load model and scaler
     model = joblib.load('/snpOracle/SNP/model_gb.pkl')
     scaler = joblib.load('/snpOracle/SNP/scaler_gb.pkl')
