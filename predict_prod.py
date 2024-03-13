@@ -5,8 +5,8 @@ from SNP.get_data_prod import prep_data
 
 def predict(timestamp):
     # Load model and scaler
-    model = joblib.load('~/snpOracle/SNP/model_gb.pkl')
-    scaler = joblib.load('~/snpOracle/SNP/scaler_gb.pkl')
+    model = joblib.load('./SNP/model_gb.pkl')
+    scaler = joblib.load('./SNP/scaler_gb.pkl')
 
     # Confirm no missing NA
     data = prep_data(drop_na=False)
