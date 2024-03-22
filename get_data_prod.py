@@ -25,8 +25,8 @@ def prep_data(drop_na:bool = True) -> DataFrame:
     data['NextClose'] = data['close'].shift(-1)
     
     # Drop NaN values
-    if(drop_na):
-        data.dropna(inplace=True)
+    # if(drop_na):
+    #    data.dropna(inplace=True)
 
     data.reset_index(inplace=True)
 
