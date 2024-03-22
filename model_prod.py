@@ -11,7 +11,8 @@ import pandas as pd
 from SNP.get_data_prod import prep_data
 
 def create_model():
-    data_df = prep_data(drop_na=True) 
+    data_df = prep_data
+    data_df = data_df.dropna()
     X = data_df.select_dtypes(include=[np.number]).drop(columns=['NextClose'])
     y = data_df['NextClose']
 
