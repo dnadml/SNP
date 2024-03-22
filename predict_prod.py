@@ -9,7 +9,7 @@ def predict(timestamp):
     scaler = joblib.load('./SNP/scaler_gb.pkl')
 
     # Confirm no missing NA
-    data = prep_data(drop_na=False)
+    data = prep_data
 
     # Ensure datetime
     latest_row = data.iloc[-1:].copy()
