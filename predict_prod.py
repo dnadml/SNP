@@ -1,7 +1,7 @@
 import joblib
 import numpy as np
 
-from get_data_prod import prep_data
+from SNP.get_data_prod import prep_data
 
 def predict():
     # Load model and scaler
