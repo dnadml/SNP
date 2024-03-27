@@ -1,15 +1,15 @@
 import joblib
 import numpy as np
 
-from SNP.get_data_prod import prep_data
+from get_data_prod import prep_data
 
-def predict(timestamp):
+def predict():
     # Load model and scaler
-    model = joblib.load('./SNP/model_gb.pkl')
-    scaler = joblib.load('./SNP/scaler_gb.pkl')
+    model = joblib.load('./snpOracle/SNP/model_gb.pkl')
+    scaler = joblib.load('./snpOracle/SNP/scaler_gb.pkl')
 
     # Confirm no missing NA
-    data = prep_data
+    data = prep_data(drop_na=False)
 
     # Ensure datetime
     latest_row = data.iloc[-1:].copy()
