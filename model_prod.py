@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from SNP.get_data_prod import prep_data
+from get_data_test import prep_data
 
 def create_model():
-    data_df = prep_data
+    data_df = prep_data()
     data_df = data_df.dropna()
     X = data_df.select_dtypes(include=[np.number]).drop(columns=['NextClose'])
     y = data_df['NextClose']
@@ -25,8 +25,7 @@ def create_model():
     X_test_scaled = scaler.transform(X_test)
 
     # initialize and train the gradient boosting regressor
-    # model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.1, max_depth=6, random_state=42) # Original
-    model = GradientBoostingRegressor(n_estimators=300, learning_rate=0.05, min_samples_split=4, min_samples_leaf=1, max_depth=6, max_features=None) # Hypertuned
+    model = GradientBoostingRegressor(n_estimators=150, learning_rate=0.05, min_samples_split=2, min_samples_leaf=3, max_depth=3, max_features=None) # Works great during steady close prices
     model.fit(X_train_scaled, y_train)
 
     # cv training set
@@ -44,7 +43,7 @@ def create_model():
     # dataframe for plot
     features = pd.Series(feature_importance, index=X_train.columns).sort_values(ascending=False)
     # plot
-    plt.figure(figsize=(20,12))
+    plt.figure(figsize=(15,12))
     features.plot(kind='bar')
     plt.title('Feature Importance')
     plt.ylabel('Importance')
@@ -125,9 +124,6 @@ if __name__ == '__main__':
 #     print(f"Mean Absolute Error (MAE): {mae:.2f}")
 #     print(f"R-squared (R2): {r2:.2f}")
 
-#     # save jobs
-#     # joblib.dump(best_model, './mining_models/best_model_gb.pkl')
-#     # joblib.dump(scaler, './mining_models/scaler_gb.pkl')
 
 # if __name__ == '__main__':
 #     create_model()
@@ -136,7 +132,8 @@ if __name__ == '__main__':
 
 # ############################### Testing Hyper Parameters Grid Search ##########################################
 # def create_model():
-#     data_df = prep_data(drop_na=True) 
+#     data_df = prep_data()
+#     data_df = data_df.dropna()
     
 #     X = data_df.select_dtypes(include=[np.number]).drop(columns=['NextClose'])
 #     y = data_df['NextClose']
@@ -147,15 +144,15 @@ if __name__ == '__main__':
 #     X_train_scaled = scaler.fit_transform(X_train)
 #     X_test_scaled = scaler.transform(X_test)
 
-    # # define parameter RandomizedSearchCV
-    # param_grid = {
-        # 'n_estimators': [150, 200, 250],
-        # 'learning_rate': [0.01, 0.05, 0.1],
-        # 'max_depth': [2, 3, 4],
-        # 'min_samples_split': [2, 4, 6],
-        # 'min_samples_leaf': [1, 2, 3],
-        # 'max_features': [None, 'sqrt', 'log2'],    
-    # }
+#     # define parameter RandomizedSearchCV
+#     param_grid = {
+#         'n_estimators': [150, 200, 250],
+#         'learning_rate': [0.01, 0.05, 0.1],
+#         'max_depth': [2, 3, 4],
+#         'min_samples_split': [2, 4, 6],
+#         'min_samples_leaf': [1, 2, 3],
+#         'max_features': [None, 'sqrt', 'log2'],    
+#     }
 
 #     # initialize base model for GridSearchCV
 #     base_model = GradientBoostingRegressor(random_state=42)
