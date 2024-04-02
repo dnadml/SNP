@@ -2,12 +2,12 @@ import joblib
 import numpy as np
 import random
 
-from RND.get_data_prod import prep_data
+from SNP.get_data_prod import prep_data
 
 def predict(timestamp):
     # Load model and scaler
-    model = joblib.load('/snpOracle/RND/model_gb.pkl')
-    scaler = joblib.load('/snpOracle/RND/scaler_gb.pkl')
+    model = joblib.load('/snpOracle/SNP/model_gb.pkl')
+    scaler = joblib.load('/snpOracle/SNP/scaler_gb.pkl')
 
     # grab data
     data = prep_data()
