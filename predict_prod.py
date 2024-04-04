@@ -28,28 +28,20 @@ def predict(timestamp):
     prediction = model.predict(latest_features_scaled)[0]
 
     ##### Predict Safety Net #####
-    # close_price = latest_row['Close'].values[0]
-
-    # define a range for your random offset
-    # offset_min, offset_max = 0.01, 0.30
-    # # define the threshold
-    # threshold = 2.00
-
-    # if np.abs(prediction - close_price) <= threshold:
-    #     prediction = prediction
-    # else:
-    # # generate random offset
-    #     random_offset = random.uniform(offset_min, offset_max)
-    
-    # # adjust prediction based on whether prediction is higher or lower than the close price
-    # if prediction > close_price:
-    #     # if predicted price is greater, subtract the random offset from the close price
-    #     adj_prediction = close_price - random_offset
-    #     prediction = adj_prediction
-    # else:
-    #     # if predicted price is lower, add the random offset to the close price
-    #     adj_prediction = close_price + random_offset
-    #     prediction = adj_prediction
+    close_price = latest_row['Close'].values[0]
+    offset_min, offset_max = 0.01, 0.30
+    threshold = 2.00
+    # Check and adjust the prediction if necessary
+    if np.abs(prediction - close_price) > threshold:
+        random_offset = random.uniform(offset_min, offset_max)
+        if prediction > close_price:
+            adj_prediction = close_price - random_offset
+            prediction = adj_prediction
+        else:
+            adj_prediction = close_price + random_offset
+            prediction = adj_prediction
+    else:
+        prediction = prediction
 
     ################################
 
