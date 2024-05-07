@@ -90,8 +90,8 @@ def create_models():
         plot_feature_importance(model, feature_columns, interval)
 
         # Save model and scaler
-        joblib.dump(model, f'/snpOracle/TESTING/model_gb_{interval}.pkl')
-        joblib.dump(scaler, f'/snpOracle/TESTING/scaler_gb_{interval}.pkl')
+        joblib.dump(model, f'/snpOracle/SNP/model_gb_{interval}.pkl')
+        joblib.dump(scaler, f'/snpOracle/SNP/scaler_gb_{interval}.pkl')
 
     return metrics
 
