@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 def prep_data(drop_na:bool = True) -> pd.DataFrame:
     # import historical data
-    temp = pd.read_pickle(r"C:\Users\mason\Local_Model\historical_data\gspc_historical.pkl")
+    temp = pd.read_pickle(f'/snpOracle/SNP/historical_data/gspc_historical.pkl')
 
     # import yahoo finance data
     data = yf.download(tickers='^GSPC', period='7d', interval='1m')
