@@ -4,7 +4,7 @@ import yfinance as yf
 
 def prep_data(drop_na:bool = True) -> pd.DataFrame:
     # download data
-    data = yf.download(tickers='^GSPC', period='7d', interval='1m')
+    data = yf.download(tickers='^GSPC', period='5d', interval='1m')
     data.index = data.index.tz_localize(None)
     data = data.drop(columns=['Adj Close', 'Volume'])
     
