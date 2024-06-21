@@ -8,7 +8,7 @@ def prep_data(drop_na:bool = True) -> pd.DataFrame:
     temp = pd.read_pickle(f'/snpOracle/SNP/historical_data/gspc_historical.pkl')
 
     # import yahoo finance data
-    data = yf.download(tickers='^GSPC', period='7d', interval='1m')
+    data = yf.download(tickers='^GSPC', period='5d', interval='1m')
     data.index = data.index.tz_localize(None)
     data = data.drop(columns=['Adj Close', 'Volume'])
 
